@@ -48,11 +48,14 @@ class FontelloPlugin {
 					}
 				})
 				.then(() => cb())
-			compilation.hooks.htmlWebpackPluginBeforeHtmlGeneration.tapAsync("FontelloPlugin", (data, cb) => {
-				console.log(getPublicPath(compilation))
-				data.assets.css.push(getPublicPath(compilation) + cssFile)
-				cb(null, data)
-			})
+
+			if (compilation.hooks.htmlWebpackPluginBeforeHtmlGeneration) {
+				compilation.hooks.htmlWebpackPluginBeforeHtmlGeneration.tapAsync("FontelloPlugin", (data, cb) => {
+					console.log(getPublicPath(compilation))
+					data.assets.css.push(getPublicPath(compilation) + cssFile)
+					cb(null, data)
+				})
+			}
 			compilation.hooks.additionalAssets.tapAsync("FontelloPlugin", cb => {
 				compilation.chunks.push(chunk)
 				compilation.namedChunks[this.options.name] = chunk
